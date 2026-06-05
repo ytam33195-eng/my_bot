@@ -32,8 +32,14 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     try:
         response = await asyncio.to_thread(agent_executor.invoke, {"messages": [("user", prompt)]})
-        final_answer = response["messages"][-1].content
+        raw_content = response["messages"][-1].content
         
+        # មុខងារបំប្លែងកូដ Unicode ទៅជាអក្សរខ្មែរវិញ
+        if isinstance(raw_content, list):
+            final_answer = "\n".join([block.get("text", "") for block in raw_content if isinstance(block, dict)])
+        else:
+            final_answer = str(raw_content)
+            
         await context.bot.delete_message(chat_id=update.effective_chat.id, message_id=processing_msg.message_id)
         await context.bot.send_message(chat_id=update.effective_chat.id, text=final_answer)
     except Exception as e:
