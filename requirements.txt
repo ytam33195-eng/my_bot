@@ -1,7 +1,5 @@
 python-telegram-bot[webhooks]
-google-genai
-langchain-anthropic
+langchain-google-genai
 langchain-community
 tavily-python
 langgraph
-flask
