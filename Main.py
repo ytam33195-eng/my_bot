@@ -8,7 +8,7 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 from langgraph.prebuilt import create_react_agent
 
 logging.basicConfig(level=logging.INFO)
-app = Flask(name)
+app = Flask(__name__)
 
 # កំណត់ API Keys
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
