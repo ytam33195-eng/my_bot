@@ -18,7 +18,7 @@ RENDER_URL = "https://my-bot-ubfg.onrender.com"
 search = TavilySearchResults(tavily_api_key=TAVILY_API_KEY)
 
 # ប្រើប្រាស់ខួរក្បាល Google Gemini
-llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro", google_api_key=GOOGLE_API_KEY)
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=GOOGLE_API_KEY)
 agent_executor = create_react_agent(llm, [search])
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
