@@ -3,37 +3,37 @@ import logging
 import asyncio
 from telegram import Update
 from telegram.ext import Application, MessageHandler, CommandHandler, filters, ContextTypes
-from langchain_anthropic import ChatAnthropic
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langgraph.prebuilt import create_react_agent
 
 logging.basicConfig(level=logging.INFO)
 
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
-ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY')
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 TAVILY_API_KEY = os.environ.get('TAVILY_API_KEY')
 RENDER_URL = "https://my-bot-ubfg.onrender.com"
 
+# កំណត់ Agent សម្រាប់ស្វែងរក
 search = TavilySearchResults(tavily_api_key=TAVILY_API_KEY)
-llm = ChatAnthropic(model="claude-3-haiku-20240307", api_key=ANTHROPIC_API_KEY)
+
+# ប្រើប្រាស់ខួរក្បាល Google Gemini
+llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=GOOGLE_API_KEY)
 agent_executor = create_react_agent(llm, [search])
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="សួស្តី! ខ្ញុំជាជំនួយការ AI របស់អ្នក។ តើមានអ្វីឱ្យខ្ញុំជួយស្វែងរកព័ត៌មានដែរឬទេ?")
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="សួស្តី! ខ្ញុំជាជំនួយការ AI របស់អ្នក (ដំណើរការដោយ Gemini)។ តើមានអ្វីឱ្យខ្ញុំជួយស្វែងរកព័ត៌មានដែរឬទេ?")
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_text = update.message.text
     prompt = f"សំណួរ៖ {user_text}។ សូមឆ្លើយដោយស្វែងរកព័ត៌មានពីអ៊ីនធឺណិត និងដាក់លីងយោងឱ្យបានច្បាស់លាស់។"
     
-    # លោតសារបញ្ជាក់ភ្លាមៗ ដើម្បីឱ្យដឹងថា Bot កំពុងគិត
-    processing_msg = await context.bot.send_message(chat_id=update.effective_chat.id, text="⏳ កំពុងស្វែងរកចម្លើយ...")
+    processing_msg = await context.bot.send_message(chat_id=update.effective_chat.id, text="⏳ កំពុងស្វែងរកចម្លើយពី Gemini...")
     
     try:
-        # ឱ្យ AI គិតដោយមិនធ្វើឱ្យគាំងប្រព័ន្ធ
         response = await asyncio.to_thread(agent_executor.invoke, {"messages": [("user", prompt)]})
         final_answer = response["messages"][-1].content
         
-        # លុបសារ "កំពុងស្វែងរក..." ចេញ រួចទម្លាក់ចម្លើយពិតប្រាកដ
         await context.bot.delete_message(chat_id=update.effective_chat.id, message_id=processing_msg.message_id)
         await context.bot.send_message(chat_id=update.effective_chat.id, text=final_answer)
     except Exception as e:
