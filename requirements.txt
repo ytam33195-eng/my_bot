@@ -1,0 +1,7 @@
+python-telegram-bot
+anthropic
+langchain-anthropic
+langchain-community
+tavily-python
+langgraph
+flask
