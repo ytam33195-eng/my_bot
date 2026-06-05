@@ -35,7 +35,7 @@ bot_app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_mes
 def home():
     return "Bot is running!"
 
-if name == 'main':
+if __name__ == '__main__':
     # រត់ Flask server សម្រាប់ Render
     port = int(os.environ.get("PORT", 10000))
     app.run(host='0.0.0.0', port=port)
