@@ -34,7 +34,12 @@ bot_app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), handle_mes
 @app.route('/')
 def home():
     return "Bot is running!"
-
+# បន្ថែមនៅខាងក្រោម handle_message
+@app.route('/telegram', methods=['POST'])
+async def telegram_webhook():
+    update = Update.de_json(request.get_json(), bot_app.bot)
+    await bot_app.process_update(update)
+    return "ok", 200
 if __name__ == '__main__':
     # រត់ Flask server សម្រាប់ Render
     port = int(os.environ.get("PORT", 10000))
