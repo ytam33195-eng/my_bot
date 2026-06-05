@@ -15,7 +15,7 @@ TAVILY_API_KEY = os.environ.get('TAVILY_API_KEY')
 RENDER_URL = "https://my-bot-ubfg.onrender.com"
 
 search = TavilySearchResults(tavily_api_key=TAVILY_API_KEY)
-llm = ChatAnthropic(model="claude-3-5-sonnet-20240620", api_key=ANTHROPIC_API_KEY)
+llm = ChatAnthropic(model="claude-3-haiku-20240307", api_key=ANTHROPIC_API_KEY)
 agent_executor = create_react_agent(llm, [search])
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
