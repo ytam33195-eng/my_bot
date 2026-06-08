@@ -38,7 +38,7 @@ def handle_message(message):
         )
         bot.reply_to(message, response.content[0].text)
     except Exception as e:
-        bot.reply_to(message, "សុំទោស មានបញ្ហាបន្តិច។")
+        bot.reply_to(message, f"បញ្ហាគឺ Error: {str(e)}")
 
 # ចាប់ផ្តើម Web Server
 if __name__ == "__main__":
