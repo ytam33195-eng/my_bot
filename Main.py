@@ -32,7 +32,7 @@ def webhook_setup():
 def handle_message(message):
     try:
         response = client.messages.create(
-            model="claude-4-8-opus-latest", # ដាក់ឈ្មោះ Model ID ថ្មីនៅទីនេះ
+            model="claude-3-haiku-20240307",
             max_tokens=1024,
             messages=[{"role": "user", "content": message.text}]
         )
