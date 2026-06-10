@@ -32,7 +32,7 @@ def webhook_setup():
 def handle_message(message):
     try:
         response = client.messages.create(
-            model="claude-3-haiku-20240307",
+            model="claude-3-5-haiku-latest",
             max_tokens=1024,
             messages=[{"role": "user", "content": message.text}]
         )
